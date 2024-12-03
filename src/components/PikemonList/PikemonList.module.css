@@ -1,0 +1,36 @@
+.themeCard {
+  cursor: pointer;
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.themeList {
+  width: 90%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  text-align: center;
+}
+
+.lightTheme1 {
+  background-color: #fff;
+  color: #000;
+}
+
+.darkTheme1 {
+  background-color: #515050;
+  color: #fff;
+}
+
+.lightTheme2 {
+  background-color: #fff;
+  color: #000;
+}
+
+.darkTheme2 {
+  background-color: #333;
+  color: #fff;
+}
