@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
 import s from "./Modal.module.css";
-import ThemeProvider, { ThemeContext } from "../Context/ThemeContext";
+import { useSelector } from "react-redux";
+import { createPortal } from "react-dom";
 
 const Modal = ({ isOpen, onClose, pikemons }) => {
+  if (!isOpen) return;
 
-  const {theme, toggleTheme } = useContext(ThemeContext);
+  const { theme } = useSelector((state) => state.theme)
 
-  return isOpen ? (
+  return createPortal(
     <div className={s.modalOverlay} onClick={onClose}>
       <div
         className={`${s.modalContent} ${
@@ -26,8 +28,9 @@ const Modal = ({ isOpen, onClose, pikemons }) => {
         <h2>{pikemons.name}</h2>
         <p>Types: {pikemons.types.join(", ")}</p>
       </div>
-    </div>
-  ) : null;
+    </div>,
+    document.getElementById('modal-root')
+  )
 };
 
 export default Modal;

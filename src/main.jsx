@@ -1,10 +1,11 @@
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-import ThemeProvider from './components/Context/ThemeContext.jsx'
+import { Provider } from 'react-redux'
+import store from "./stores/store.js"
 
 createRoot(document.getElementById('root')).render(
-  <ThemeProvider>
-    <App />
-  </ThemeProvider>
+  <Provider store={store}>
+      <App />
+  </Provider>
 )

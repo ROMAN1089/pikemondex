@@ -1,0 +1,43 @@
+.pikemonPage {
+  text-align: center;
+  margin: 20px;
+}
+
+.pikemonPage h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.pikemonPage img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+.pikemonPage h2 {
+  font-size: 1.5rem;
+  margin-top: 20px;
+}
+
+.pikemonPage ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.pikemonPage li {
+  font-size: 1.2rem;
+  margin: 5px 0;
+}
+
+.pikemonPage button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.pikemonPage button:hover {
+  background-color: #0056b3;
+}

@@ -1,47 +1,69 @@
-import React, { useContext, useEffect, useState } from "react";
-import s from './PikemonFilter.module.css'
-import { ThemeContext } from "../Context/ThemeContext";
+import React from "react";
+import s from "./PikemonFilter.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilters } from "../../stores/filterSlice";
 
-const PikemonFilter = ({onFilter}) => {
-  const [nameFilter, setNameFilter] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const {theme, toggleTheme } = useContext(ThemeContext);
-
-  const resetInput = (setNameFilter, setTypeFilter) => {
-    setNameFilter("");
-    setTypeFilter("all");
-  }
+const PikemonFilter = ({ onFilter }) => {
+  const dispatch = useDispatch(); 
+  const { theme } = useSelector((state) => state.theme)
   
-  // const typeInfo = ['asd', 'asd2', ]
+  const {nameFilter, typeFilter} = useSelector((state) => state.filter);
 
-  useEffect(() => {
-    onFilter(nameFilter, typeFilter);
-  }, [nameFilter, typeFilter, onFilter]);
-    
+  const typeInfo = [
+    "all",
+    "grass",
+    "fire",
+    "water",
+    "poison",
+    "flying",
+    "bug",
+    "normal",
+    "electric",
+  ];
+
+  const handleReset = () => {
+    dispatch(setFilters({nameFilter: "", typeFilter: "all"}));
+  }
+
+  const handleNameFilter = (e) => {
+    dispatch(setFilters({nameFilter: e.target.value }));
+  }
+
+  const handleTypeFilter = (e) => {
+    dispatch(setFilters({typeFilter: e.target.value }));
+  }
+
   return (
     <div>
-      <form  className={`${theme === 'darkTheme' ? s.darkTheme : s.lightTheme}`} style={{ marginBottom: "20px"}} onSubmit={(event) => { event.preventDefault(); resetInput(setNameFilter, setTypeFilter) }}>
+      <form
+        className={`${theme === "darkTheme" ? s.darkTheme : s.lightTheme}`}
+        style={{ marginBottom: "20px" }}
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleReset();
+        }}
+      >
         <input
           type="text"
           placeholder="Filter by name"
           value={nameFilter}
-          onChange={(e) => setNameFilter(e.target.value)}
+          onChange={
+            handleNameFilter
+          }
           style={{ marginRight: "10px" }}
         />
         <select
           value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
+          onChange={
+            handleTypeFilter
+          }
           style={{ marginRight: "10px" }}
         >
-          <option value="all">All Types</option>
-          <option value="grass">Grass</option>
-          <option value="fire">Fire</option>
-          <option value="water">Water</option>
-          <option value="poison">Poison</option>
-          <option value="flying">Flying</option>
-          <option value="bug">Bug</option>
-          <option value="normal">Normal</option>
-          <option value="electric">Electric</option>
+          {typeInfo.map((type) => (
+            <option key={type} value={type}>
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+            </option>
+          ))}
         </select>
         <button type="submit">Reset</button>
       </form>

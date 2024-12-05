@@ -1,31 +1,32 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import PikemonsCard from "./PikemonsCard";
 import s from "./PikemonList.module.css";
 import Modal from "../Modal/Modal";
-import { ThemeContext } from "../Context/ThemeContext";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPikemons } from "../../stores/pokemonSlice";
+import { clearSelectedPikemons } from "../../stores/selectedPokemonSlice";
+import { selectFilteredPikemons } from "../../stores/filterSlice";
 
 
-const PikemonList = ({
-  pikemons,
-  loadMore,
-  hasMore,
-  loading,
-}) => {
-
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedPokemon, setSelectedPokemon] = useState(null);
-  const {theme, toggleTheme } = useContext(ThemeContext);
-  const loadingRef = useRef(loading);
-  loadingRef.current = loading;
+const PikemonList = () => {
+  const dispatch = useDispatch();
+  const { theme } = useSelector((state) => state.theme)
+  const { pikemons, hasMore, loading } = useSelector(
+    (state) => state.pikemon
+  );  
+  const selectedPikemon = useSelector((state) => state.selectedPikemon);
+  const FilteredPikemons = useSelector(selectFilteredPikemons);
+  console.log(FilteredPikemons);
 
   const handleScroll = (e) => {
     const bottom =
-      document.documentElement.scrollHeight - 100 <=
+      document.documentElement.scrollHeight - 150 <=
       document.documentElement.scrollTop + window.innerHeight;
-    if (bottom && !loadingRef.current && hasMore) {
-      loadMore();
+    if (bottom && !loading && hasMore) {
+      dispatch(fetchPikemons());
     }
   };
+
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -33,7 +34,7 @@ const PikemonList = ({
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [hasMore]);
+  }, [loading, hasMore]);
 
   return (
     <div
@@ -42,20 +43,22 @@ const PikemonList = ({
       }`}
     >
       <Modal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        pikemons={selectedPokemon}
+        isOpen={Boolean(selectedPikemon)}
+        onClose={() =>  dispatch(clearSelectedPikemons())}
+        pikemons={selectedPikemon}
       />
 
-      {pikemons.map((pikemon) => (
-        <PikemonsCard
-          key={pikemon.id}
-          pikemons={pikemon}
-          theme={theme}
-          setModalOpen={setModalOpen}
-          setSelectedPokemon={setSelectedPokemon}
-        />
-      ))}
+      {Array.isArray(FilteredPikemons) && FilteredPikemons.length > 0 ? (
+        FilteredPikemons.map((pikemon) => (
+          <PikemonsCard
+            key={pikemon.id}
+            pikemons={pikemon}
+            theme={theme}
+          />
+        ))
+      ) : (
+        <p>No Pokémon available.</p>
+      )}
 
       {loading && <p>Loading...</p>}
     </div>
